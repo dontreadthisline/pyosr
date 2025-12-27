@@ -8,4 +8,11 @@ class OSMRepository:
     way_to_node:dict[int,set[int]]
     graph:Graph
     looker:index.Index
+    def __init__(self):
+        self.ways = {}
+        self.nodes = {}
+        self.node_to_way = {}
+        self.way_to_node = {}
+        self.graph = {}
+        self.looker = index.Index()
 
