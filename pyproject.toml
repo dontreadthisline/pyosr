@@ -1,0 +1,12 @@
+[project]
+name = "pyosr"
+version = "0.1.0"
+description = "a simple route use dijistra algorithm"
+readme = "README.md"
+requires-python = ">=3.13"
+dependencies = [
+    "opencage>=3.2.0",
+    "osmium[docs]>=4.2.0",
+    "requests>=2.32.5",
+    "rtree>=1.4.1",
+]
