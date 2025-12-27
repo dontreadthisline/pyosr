@@ -22,6 +22,7 @@ class Path:
     points:list[GeoPoint]
     dist:float
     cost:float
+    name:str
 
 class Route:
     cost:float
@@ -35,6 +36,8 @@ class Route:
 
     def __len__(self)->int:
         return len(self.paths)
+    def __bool__(self)->bool:
+        return len(self.paths) != 0
 
 type Graph = dict[int,list[int]]
 
