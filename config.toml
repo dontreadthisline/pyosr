@@ -1,7 +1,7 @@
 [input]
 osm_file = "./road_data/bj251220.osm"
 load_relations = true
-bound_name = ["a","b"]
+bound_name = ["北京市昌平区天通西苑二区","北京市昌平区天通东苑三区"]
 bound_lon_lat = [116.26913,40.03741,116.27908,40.05083]
 [builder]
 enable_graph_builder = true
@@ -10,5 +10,5 @@ enable_node_builder = true
 enable_rtree_builder = true
 
 [router]
-algorithm = "dfs"
+algorithm = "dijkstra"
 heuristic_factor = 1.2

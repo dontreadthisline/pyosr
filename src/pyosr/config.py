@@ -1,5 +1,6 @@
 from pydantic import BaseModel, Field
 from typing import Literal
+from .rgeo import rgeo
 import toml
 
 class OSMInputConfig(BaseModel):
@@ -24,4 +25,11 @@ class OsrConfig(BaseModel):
 
 def load_config(conf_path:str)->OsrConfig:
     raw = toml.load(conf_path)
-    return OsrConfig(**raw)
+    conf = OsrConfig(**raw)
+    ld,ru = None,None
+    if all(conf.input.bound_name):
+        ld = rgeo(conf.input.bound_name[0])
+        ru = rgeo(conf.input.bound_name[1])
+    if ld and ru:
+        conf.input.bound_lon_lat = (ld.lon,ld.lat,ru.lon,ru.lat)
+    return conf
