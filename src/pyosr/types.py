@@ -17,7 +17,7 @@ class Road(NamedTuple):
     road_name:str
     mbr:osm.Box
 
-class Path:
+class Path(NamedTuple):
     way_id:int
     points:list[GeoPoint]
     dist:float

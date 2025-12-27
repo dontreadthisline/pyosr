@@ -5,10 +5,10 @@ from .types import Graph, OdPair, Path,Route,GeoPoint
 from .repository import OSMRepository
 from .config import OsrConfig
 from .rgeo import rgeo
+
 class Router(Protocol):
     def __call__(self,OdPair)->Route:
         ...
-
 
 class DfsRouter(Router):
     repo:OSMRepository
@@ -21,6 +21,7 @@ class DfsRouter(Router):
         link_pair = self._mapmatch(od)
         if not link_pair:
             return Route()
+
         o_link,d_link = link_pair
         links = self._dfs(self.repo.graph,o_link,d_link,{})
         route = Route()
@@ -35,6 +36,7 @@ class DfsRouter(Router):
     def _dfs(self,graph:Graph,o_link:int,d_link:int,visited:dict[int,bool])->list[int]:
         if o_link == d_link:
             return [o_link]
+        visited[o_link] = True
         return []
     def _mapmatch(self,od:OdPair)->tuple[int,int]|None:
         o,d = od
@@ -58,3 +60,4 @@ class DfsRouter(Router):
             case _:
                 return None
         return None
+
