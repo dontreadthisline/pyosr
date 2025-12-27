@@ -37,7 +37,7 @@ class RepoNodeBuilder(Builder[osm.Node]):
         need_keep = all(not filter(node_ref) for filter in self.filters)
         if not need_keep:
             return
-        point = GeoPoint(node_ref.id,node_ref.lon,node_ref.lat)
+        point = GeoPoint(poi_id=node_ref.id,lon=node_ref.lon,lat=node_ref.lat)
         self.repo.nodes[node_ref.id] = point
 
 class RepoWayBuilder(Builder[osm.Way]):
@@ -64,7 +64,7 @@ class RepoWayBuilder(Builder[osm.Way]):
                 way_ids = self.repo.node_to_way[node.ref]
             way_ids.add(link_id)
             self.repo.node_to_way[node.ref] = way_ids
-        if not poi_ids:
+        if not points:
             return
         mbr = find_mbr(points)
         road_len = sum(geom.haversine_distance(a.to_location(),b.to_location()) for a,b in pairwise(points))

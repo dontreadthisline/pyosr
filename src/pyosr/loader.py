@@ -29,6 +29,7 @@ def build_graph(repo:OSMRepository)->Graph:
         for node_id in node_ids:
             if node_id in repo.node_to_way:
                 to_ways |= repo.node_to_way[node_id]
+        to_ways -= {way_id}
         if to_ways:
            graph[way_id] = list(to_ways - {way_id})
     return graph
@@ -40,4 +41,6 @@ def build_rtree(repo:OSMRepository)->index.Index:
             bl = way.mbr.bottom_left
             tr = way.mbr.top_right
             looker.insert(way_id,(bl.lat,bl.lon,tr.lat,tr.lon))
+        else:
+            print(way.mbr)
     return looker
