@@ -1,0 +1,14 @@
+[input]
+osm_file = "./road_data/bj251220.osm"
+load_relations = true
+bound_name = ["a","b"]
+bound_lon_lat = [116.26913,40.03741,116.27908,40.05083]
+[builder]
+enable_graph_builder = true
+enable_way_builder = true
+enable_node_builder = true
+enable_rtree_builder = true
+
+[router]
+algorithm = "dfs"
+heuristic_factor = 1.2

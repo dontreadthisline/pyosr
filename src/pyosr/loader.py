@@ -1,16 +1,24 @@
-from typing import Iterable,Any
-from .types import GeoPoint, Graph
+from .types import  GeoPoint, Graph
 from .repository import OSMRepository
 from .publisher import Dispatcher,OSMPublisher
+from .builders import FilterOutOfBox, RepoNodeBuilder, RepoWayBuilder
+from .config import OsrConfig
 import osmium
-from osmium import osm
 from rtree import index
 
-def load_osm_repo(osm_file:str,conf:Any)->OSMRepository:
+def load_osm_repo(conf:OsrConfig)->OSMRepository:
     repo = OSMRepository()
     dispatcher = Dispatcher()
     publisher = OSMPublisher(dispatcher)
-    osmium.apply(osm_file,publisher)
+    #some ugly code
+    ld = GeoPoint(0,conf.input.bound_lon_lat[0],conf.input.bound_lon_lat[1])
+    ru = GeoPoint(0,conf.input.bound_lon_lat[2],conf.input.bound_lon_lat[3])
+    node_filter = FilterOutOfBox(ld,ru)
+    node_builder = RepoNodeBuilder(repo,[node_filter,])
+    way_builder = RepoWayBuilder(repo)
+    dispatcher.register("node",node_builder)
+    dispatcher.register("way",way_builder)
+    osmium.apply(conf.input.osm_file,publisher)
     repo.graph = build_graph(repo)
     repo.looker = build_rtree(repo)
     return repo

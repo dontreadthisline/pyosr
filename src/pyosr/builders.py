@@ -26,22 +26,23 @@ class Builder(Protocol[OSM_T]):
 
 
 class RepoNodeBuilder(Builder[osm.Node]):
+
     def __init__(self,repo:OSMRepository,filters:list[Filter]):
         self.repo = repo
         self.filters = filters
 
-    def node(self,node_ref:osm.Node):
+    def __call__(self,node_ref:osm.Node):
         need_keep = all(not filter(node_ref) for filter in self.filters)
         if need_keep:
             point = GeoPoint(node_ref.id,node_ref.lon,node_ref.lat)
             self.repo.nodes[node_ref.id] = point
 
-class RepoWayBuilder(Builder[osm.Node]):
-    def __init__(self,repo:OSMRepository,filters:list[Filter]):
+class RepoWayBuilder(Builder[osm.Way]):
+    def __init__(self,repo:OSMRepository,filters:list[Filter]=[]):
         self.repo = repo
         self.filters = filters
 
-    def way(self,way_ref:osm.Way):
+    def __call__(self,way_ref:osm.Way):
         need_keep = all(not filter(way_ref) for filter in self.filters)
         if not need_keep:
             return
