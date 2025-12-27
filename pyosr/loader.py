@@ -29,5 +29,7 @@ def build_graph(repo:OSMRepository)->Graph:
 def build_rtree(repo:OSMRepository)->index.Index:
     looker = index.Index()
     for way_id,way in repo.ways.items():
-        looker.insert(way_id,way.bound)
+        bl = way.mbr.bottom_left
+        tr = way.mbr.top_right
+        looker.insert(way_id,(bl.lat,bl.lon,tr.lat,tr.lon))
     return looker

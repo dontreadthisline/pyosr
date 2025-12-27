@@ -1,7 +1,7 @@
 from typing import NamedTuple,TypeVar
 from osmium import osm
 
-OSM_T = TypeVar("OSM_T",osm.Node,osm.Way,osm.Relation)
+OSM_T = TypeVar("OSM_T",osm.Node,osm.Way,osm.Relation,contravariant=True)
 
 class GeoPoint(NamedTuple):
     poi_id:int
@@ -15,7 +15,7 @@ class Road(NamedTuple):
     points:list[GeoPoint]
     road_len:float
     road_name:str
-    bound:osm.Box
+    mbr:osm.Box
 
 class Path:
     way_id:int

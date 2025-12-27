@@ -1,5 +1,7 @@
 from typing import Protocol
 from osmium import osm
+
+from pyosr.utils import find_mbr
 from .types import GeoPoint,OSM_T,Road
 from .repository import OSMRepository
 
@@ -60,7 +62,8 @@ class RepoWayBuilder(Builder[osm.Node]):
             self.repo.node_to_way[node.ref] = way_ids
 
         if len(poi_ids) > 0:
-            road = Road(link_id,points,0.0,road_name,osm.Box(0,0,0,0))
+            mbr = find_mbr(points)
+            road = Road(link_id,points,0.0,road_name,mbr)
             self.repo.ways[link_id] = road
             self.repo.way_to_node[link_id] = poi_ids
 
