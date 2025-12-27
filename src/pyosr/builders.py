@@ -1,4 +1,5 @@
 from typing import Protocol
+from itertools import pairwise
 from osmium import osm
 from osmium import geom
 from pyosr.utils import find_mbr
@@ -63,10 +64,11 @@ class RepoWayBuilder(Builder[osm.Way]):
                 way_ids = self.repo.node_to_way[node.ref]
             way_ids.add(link_id)
             self.repo.node_to_way[node.ref] = way_ids
-        road_len = geom.haversine_distance(way_ref.nodes) #todo fix it not accurate
-        if len(poi_ids) > 0:
-            mbr = find_mbr(points)
-            road = Road(link_id,points,road_len,road_name,mbr)
-            self.repo.ways[link_id] = road
-            self.repo.way_to_node[link_id] = poi_ids
+        if not poi_ids:
+            return
+        mbr = find_mbr(points)
+        road_len = sum(geom.haversine_distance(a.to_location(),b.to_location()) for a,b in pairwise(points))
+        road = Road(link_id,points,road_len,road_name,mbr)
+        self.repo.ways[link_id] = road
+        self.repo.way_to_node[link_id] = poi_ids
 

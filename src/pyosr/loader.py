@@ -10,7 +10,6 @@ def load_osm_repo(conf:OsrConfig)->OSMRepository:
     repo = OSMRepository()
     dispatcher = Dispatcher()
     publisher = OSMPublisher(dispatcher)
-    #some ugly code
     ld = GeoPoint(0,conf.input.bound_lon_lat[0],conf.input.bound_lon_lat[1])
     ru = GeoPoint(0,conf.input.bound_lon_lat[2],conf.input.bound_lon_lat[3])
     node_filter = FilterOutOfBox(ld,ru)
@@ -37,7 +36,8 @@ def build_graph(repo:OSMRepository)->Graph:
 def build_rtree(repo:OSMRepository)->index.Index:
     looker = index.Index()
     for way_id,way in repo.ways.items():
-        bl = way.mbr.bottom_left
-        tr = way.mbr.top_right
-        looker.insert(way_id,(bl.lat,bl.lon,tr.lat,tr.lon))
+        if way.mbr.valid():
+            bl = way.mbr.bottom_left
+            tr = way.mbr.top_right
+            looker.insert(way_id,(bl.lat,bl.lon,tr.lat,tr.lon))
     return looker

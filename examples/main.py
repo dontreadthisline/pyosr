@@ -4,8 +4,11 @@ from pyosr.router import DfsRouter
 from pyosr.config import OsrConfig,load_config
 
 def extract_and_route(config_path:str)->Route:
-    osr_conf = load_config("../config.toml")
+    osr_conf = load_config(config_path)
     repo = load_osm_repo(osr_conf)
+    print(len(repo.graph))
+    print(len(repo.ways))
+    print(len(repo.nodes))
     router = DfsRouter(repo,osr_conf)
     origin = "天通苑"
     distination = "西二旗"
@@ -13,6 +16,7 @@ def extract_and_route(config_path:str)->Route:
     return route
 
 def main():
-    extract_and_route("")
+    conf_path = "./config.toml"
+    extract_and_route(conf_path)
 if __name__ == "__main__":
     main()

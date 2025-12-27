@@ -8,7 +8,7 @@ class GeoPoint(NamedTuple):
     lon:float
     lat:float
     def to_location(self)->osm.Location:
-        return osm.Location(lon=self.lon,lat=self.lat)
+        return osm.Location(self.lon,self.lat)
 
 class Road(NamedTuple):
     link_id:int
