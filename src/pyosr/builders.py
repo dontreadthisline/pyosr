@@ -1,6 +1,6 @@
 from typing import Protocol
 from osmium import osm
-
+from osmium import geom
 from pyosr.utils import find_mbr
 from .types import GeoPoint,OSM_T,Road
 from .repository import OSMRepository
@@ -32,10 +32,12 @@ class RepoNodeBuilder(Builder[osm.Node]):
         self.filters = filters
 
     def __call__(self,node_ref:osm.Node):
+
         need_keep = all(not filter(node_ref) for filter in self.filters)
-        if need_keep:
-            point = GeoPoint(node_ref.id,node_ref.lon,node_ref.lat)
-            self.repo.nodes[node_ref.id] = point
+        if not need_keep:
+            return
+        point = GeoPoint(node_ref.id,node_ref.lon,node_ref.lat)
+        self.repo.nodes[node_ref.id] = point
 
 class RepoWayBuilder(Builder[osm.Way]):
     def __init__(self,repo:OSMRepository,filters:list[Filter]=[]):
@@ -61,10 +63,10 @@ class RepoWayBuilder(Builder[osm.Way]):
                 way_ids = self.repo.node_to_way[node.ref]
             way_ids.add(link_id)
             self.repo.node_to_way[node.ref] = way_ids
-
+        road_len = geom.haversine_distance(way_ref.nodes) #todo fix it not accurate
         if len(poi_ids) > 0:
             mbr = find_mbr(points)
-            road = Road(link_id,points,0.0,road_name,mbr)
+            road = Road(link_id,points,road_len,road_name,mbr)
             self.repo.ways[link_id] = road
             self.repo.way_to_node[link_id] = poi_ids
 
