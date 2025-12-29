@@ -9,6 +9,7 @@ dependencies = [
     "osmium[docs]>=4.2.0",
     "pydantic>=2.12.5",
     "requests>=2.32.5",
+    "results>=1.4.0",
     "rtree>=1.4.1",
     "toml>=0.10.2",
 ]
@@ -18,3 +19,6 @@ dev = [
     "mkdocs>=1.6.1",
     "pytest>=9.0.2",
 ]
+
+[tool.mypy]
+plugins = ["returns.contrib.mypy.returns_plugin"]
